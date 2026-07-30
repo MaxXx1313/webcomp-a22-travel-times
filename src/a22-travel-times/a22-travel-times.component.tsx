@@ -219,20 +219,22 @@ export class A22TravelTimesComponent implements StencilComponent {
             <span class="title__text">{this.languageService.translate('app.title')}</span>
           </div>
 
-          <div class="title-select">
-            <noi-icon name="vehicle" class={'vehicle--' + this.vehicleType}></noi-icon>
-            <div class={this.vehicleType === 'light' ? 'option selected-light' : 'option'}
-                 onClick={() => this.setVehicleType('light')}>
-              {this.languageService.translate('app.vehicle.light')}
+          <div class="title-cell">
+
+            <div class="title-select">
+              <noi-icon name="vehicle" class={'vehicle--' + this.vehicleType}></noi-icon>
+              <div class={this.vehicleType === 'light' ? 'option selected-light' : 'option'}
+                   onClick={() => this.setVehicleType('light')}>
+                {this.languageService.translate('app.vehicle.light')}
+              </div>
+              <noi-toggle class="vehicle"
+                          checked={this.vehicleType === 'heavy'}
+                          onNoiChange={e => this.changeVehicleType(e)}></noi-toggle>
+              <div class={this.vehicleType === 'heavy' ? 'option selected-heavy' : 'option'}
+                   onClick={() => this.setVehicleType('heavy')}>
+                {this.languageService.translate('app.vehicle.heavy')}
+              </div>
             </div>
-            <noi-toggle class="vehicle"
-                        checked={this.vehicleType === 'heavy'}
-                        onNoiChange={e => this.changeVehicleType(e)}></noi-toggle>
-            <div class={this.vehicleType === 'heavy' ? 'option selected-heavy' : 'option'}
-                 onClick={() => this.setVehicleType('heavy')}>
-              {this.languageService.translate('app.vehicle.heavy')}
-            </div>
-          </div>
 
             <div class="title-select">
               <div class={this.sourceType === 'tollgate' ? 'option selected' : 'option'}
@@ -245,6 +247,8 @@ export class A22TravelTimesComponent implements StencilComponent {
                    onClick={() => this.setSourceType('tvcc')}>
                 {this.languageService.translate('app.source.tvcc')}
               </div>
+            </div>
+
           </div>
       </div>
 
