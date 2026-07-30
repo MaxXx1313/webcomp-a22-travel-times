@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 
-import { TravelTimesLevelDescription, TravelTimesResponse } from "./TravelTimes";
+import { TravelTimesResponse } from "./TravelTimes";
 import {
   TravelTimesLevel,
   TravelTimesShort,
@@ -34,21 +34,6 @@ export class TrafficTimesUtils {
   /**
    *
    */
-  static parseTrafficLevel(level: TravelTimesLevelDescription | string): TravelTimesLevel {
-    if ( !level) {
-      return -1;
-    }
-    const levelNormalized = (level || '')
-      .trim()
-      .toLowerCase()
-      .replace(/[\s]+/g, ' ');
-
-    return (API_TRAFFIC_LEVELS as any)[levelNormalized] || -1 as TravelTimesLevel;
-  }
-
-  /**
-   *
-   */
   static convertToShortInfo(dataArr: TravelTimesResponse[]): TravelTimesShort[] {
     // group by "stationId"
     const resultHash: { [stationId: string]: TravelTimesShort } = {};
@@ -59,7 +44,7 @@ export class TrafficTimesUtils {
         continue;
       }
 
-      if ( !resultHash[stationInfo.stationId]) {
+      if (!resultHash[stationInfo.stationId]) {
         resultHash[stationInfo.stationId] = stationInfo;
       } else {
         // merge results
@@ -89,7 +74,7 @@ export class TrafficTimesUtils {
    */
   static _mergeDirectionData(data1: TravelTimesShort_directionData, data2: TravelTimesShort_directionData | undefined): TravelTimesShort_directionData | undefined {
 
-    if ( !data1 && !data2) {
+    if (!data1 && !data2) {
       console.warn('Unexpected data received: both parts are empty');
       return;
     }
@@ -115,43 +100,117 @@ export class TrafficTimesUtils {
   }
 
   /**
-   *
+   * parse 'scode'
+   * @example "1865-1864" ->
+   * @example "02_A22A22_01-00680_01-00679_DX"
+   * @example "urn:linkstation:a22:tvcc:28"
    */
-  static _parseStationInfo(response: TravelTimesResponse): TravelTimesShort | null {
-    // parse 'scode'
-    const stations = (response.scode || '').split('-');
+  static __parseStationCode(response: TravelTimesResponse): { from: string, to: string } | null {
+    const sCodeStr = response?.scode;
+
+    const stations = (sCodeStr || '').split('-');
     if (stations.length != 3) {
-      console.warn('Unable to parse scode:', response.scode);
+      console.warn('Unable to parse station code (scode):', sCodeStr);
       return null;
       ////////////
     }
-    // parse 'sname'
-    const names = (response.sname || '').split(' - ');
-    // station code now is ion the format 02_A22A22_01-00671_01-00670_DX
+    // station code now is in the format 02_A22A22_01-00671_01-00670_DX
     // and we need to get 00671 - 00670
     const stationIds = [stations[1].split("_")[0], stations[2].split("_")[0]];
+    if (!stationIds) {
+      console.warn('Unable to parse station code (scode):', sCodeStr);
+    }
+    return {
+      from: stationIds[0],
+      to: stationIds[1],
+    };
+  }
 
+  /**
+   *
+   */
+  static __parseTrafficLevel(response: TravelTimesResponse): TravelTimesLevel {
+    const trafficLevelStr = response?.mvalue;
+
+    if (!trafficLevelStr) {
+      return -1;
+    }
+    const levelNormalized = (trafficLevelStr || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[\s]+/g, ' ');
+
+    const trafficLevel = (API_TRAFFIC_LEVELS as any)[levelNormalized] || -1 as TravelTimesLevel;
+    if (!trafficLevel) {
+      console.warn('Unable to parse traffic level (mvalue):', trafficLevelStr);
+    }
+    return trafficLevel;
+  }
+
+  /**
+   *
+   */
+  static __parseVehicleType(response: TravelTimesResponse): TravelTimesVehicleType | undefined {
+    const vehicleTypeStr = response?.tname;
+
+    const vehicleType = (API_VEHICLE_TYPES as any)[vehicleTypeStr] as TravelTimesVehicleType | undefined;
+    if (!vehicleType) {
+      console.warn('Unable to parse vehicle type (tname):', vehicleTypeStr);
+    }
+    return vehicleType;
+  }
+
+  /**
+   *
+   */
+  static __parseDirection(response: TravelTimesResponse): 'south' | 'north' | undefined {
     // parse 'iddirezione'
     const directionStr = response?.smetadata?.iddirezione;
     const direction = API_DIRECTIONS[directionStr];
-    if ( !direction) {
-      console.warn('Unable to parse iddirezione:', response);
+    if (!direction) {
+      console.warn('Unable to parse direction (smetadata.iddirezione):', directionStr);
+      ////////////
+    }
+    return direction;
+  }
+
+  /**
+   * extract station name
+   * @example "ROVERETO NORD - TRENTO SUD" -> "ROVERETO NORD" (we cust the first part ony)
+   */
+  static __parseStationName(response: TravelTimesResponse): { from: string, to: string } {
+    const names = (response.sname || '').split(' - ');
+    return {from: names[0], to: names[1]};
+  }
+
+  static _parseStationInfo(response: TravelTimesResponse): TravelTimesShort | null {
+
+    // parse
+    const stationName = TrafficTimesUtils.__parseStationName(response);
+
+    const stationIds = TrafficTimesUtils.__parseStationCode(response);
+    if (!stationIds) {
+      return null;
+      ////////////
+    }
+
+    // parse 'iddirezione'
+    const direction = TrafficTimesUtils.__parseDirection(response);
+    if (!direction) {
       return null;
       ////////////
     }
 
     // parse type
-    const vehicleType = (API_VEHICLE_TYPES as any)[response.tname] as TravelTimesVehicleType | undefined;
-    if ( !vehicleType) {
-      console.warn('Unable to parse tname:', response);
+    const vehicleType = TrafficTimesUtils.__parseVehicleType(response);
+    if (!vehicleType) {
       return null;
       ////////////
     }
 
     // parse level
-    const trafficLevel = TrafficTimesUtils.parseTrafficLevel(response.mvalue);
-    if ( !trafficLevel) {
-      console.warn('Unable to parse mvalue:', response);
+    const trafficLevel = TrafficTimesUtils.__parseTrafficLevel(response);
+    if (!trafficLevel) {
       return null;
       ////////////
     }
@@ -165,7 +224,7 @@ export class TrafficTimesUtils {
 
     const directionData: TravelTimesShort_directionData = {
       stationId: "",
-      name: names[1],
+      name: stationName.to,
     };
 
     switch (vehicleType) {
@@ -183,27 +242,37 @@ export class TrafficTimesUtils {
         break;
     }
 
+    // Station is a 'line' from north to south or vice-versa.
+    // we save always 'north-south' as the name
     switch (direction) {
       case 'south':
-        info.south = directionData;
+        // it's "north->south"
+        /// main info
         info.distanceFromNorth = response.smetadata?.metroinizio || -1;
 
-        info.stationId = stationIds[0];
-        info.name = names[0] + "-" + names[1];
+        info.stationId = stationIds.from
+        info.name = stationName.from + "-" + stationName.to;
 
-        info.south.stationId = stationIds[1];
-        info.south.name = names[1];
+        // direction data
+        info.south = directionData;
+        info.south.stationId = stationIds.to;
+        info.south.name = stationName.to;
 
         break;
       case 'north':
-        info.north = directionData;
+        // it's "south->north"
+        /// main info
         info.distanceFromNorth = response.smetadata?.metrofine || -1;
 
-        info.stationId = stationIds[1];
-        info.name = names[1] + " - " + names[0];
+        info.stationId = stationIds.to;
 
-        info.north.stationId = stationIds[0];
-        info.north.name = names[1];
+        // it's "south->north", so to keep name convention we save the opposite order
+        info.name = stationName.to + "-" + stationName.from;
+
+        // direction data
+        info.north = directionData;
+        info.north.stationId = stationIds.from;
+        info.north.name = stationName.to;
 
         break;
     }
