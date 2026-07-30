@@ -4,7 +4,12 @@
 
 
 import { TravelTimesLevelDescription, TravelTimesResponse } from "./TravelTimes";
-import { TravelTimesLevel, TravelTimesShort, TravelTimesShort_directionData } from "./TravelTimesShort";
+import {
+  TravelTimesLevel,
+  TravelTimesShort,
+  TravelTimesShort_directionData,
+  TravelTimesVehicleType
+} from "./TravelTimesShort";
 
 const API_TRAFFIC_LEVELS = {
   "traffico scorrevole": 1,
@@ -12,17 +17,17 @@ const API_TRAFFIC_LEVELS = {
   "traffico rallentato con code": 3,
   "code a tratti": 4,
   "traffico critico": 5,
-};
+} as const;
 
 const API_VEHICLE_TYPES = {
   'lds_leggeri_desc': 'light',
   'lds_pesanti_desc': 'heavy',
-};
+} as const;
 
 const API_DIRECTIONS = {
   'Sud': 'south',
   'Nord': 'north',
-};
+} as const;
 
 export class TrafficTimesUtils {
 
@@ -38,7 +43,7 @@ export class TrafficTimesUtils {
       .toLowerCase()
       .replace(/[\s]+/g, ' ');
 
-    return API_TRAFFIC_LEVELS[levelNormalized] || -1;
+    return (API_TRAFFIC_LEVELS as any)[levelNormalized] || -1 as TravelTimesLevel;
   }
 
   /**
@@ -82,24 +87,24 @@ export class TrafficTimesUtils {
   /**
    *
    */
-  static _mergeDirectionData(data1: TravelTimesShort_directionData | null, data2: TravelTimesShort_directionData | null): TravelTimesShort_directionData {
+  static _mergeDirectionData(data1: TravelTimesShort_directionData, data2: TravelTimesShort_directionData | undefined): TravelTimesShort_directionData | undefined {
 
     if ( !data1 && !data2) {
       console.warn('Unexpected data received: both parts are empty');
-      return null;
+      return;
     }
 
     if (data1?.stationId && data2?.stationId && data1?.stationId !== data2?.stationId) {
       console.warn('Unexpected data received: stationId is different', data1, data2);
-      return null;
+      return;
     }
     if (data1?.lightVehicle && data2?.lightVehicle) {
       console.warn('Unexpected data received: lightVehicle is duplicated', data1);
-      return null;
+      return;
     }
     if (data1?.heavyVehicle && data2?.heavyVehicle) {
       console.warn('Unexpected data received: heavyVehicle is duplicated', data1);
-      return null;
+      return;
     }
 
     return {
@@ -136,7 +141,7 @@ export class TrafficTimesUtils {
     }
 
     // parse type
-    const vehicleType = API_VEHICLE_TYPES[response.tname];
+    const vehicleType = (API_VEHICLE_TYPES as any)[response.tname] as TravelTimesVehicleType | undefined;
     if ( !vehicleType) {
       console.warn('Unable to parse tname:', response);
       return null;

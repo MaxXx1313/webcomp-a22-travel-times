@@ -50,14 +50,14 @@ export class A22TravelTimesComponent implements StencilComponent {
   reloadInterval: number = 600000;
 
   @State()
-  layoutResolved: ViewLayout;
+  layoutResolved!: ViewLayout; // force not null because it's initialized immediately
 
-  @Element() el: HTMLElement;
+  @Element() el!: HTMLElement;
 
   _travelTimesData: TravelTimesShort[] = [];
 
-  dataSub: Subscription = null;
-  sizeObserver: ResizeObserver = null;
+  dataSub: Subscription | null = null;
+  sizeObserver: ResizeObserver | null = null;
 
   // note: services are overridden in tests
   travelTimesDataService: TravelTimesDataService;
