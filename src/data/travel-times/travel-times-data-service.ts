@@ -7,6 +7,7 @@ import { TravelTimesResponse } from "./TravelTimes";
 import { TrafficTimesUtils } from "./traffic-times.utils";
 import { TravelTimesShort } from "./TravelTimesShort";
 import { TimerWatcher } from "../../utils/TimerWatcher";
+import { buildUrl } from "../../utils/url";
 
 // origin is used to track usage and traffic patterns
 const ORIGIN = 'webcomp-a22-travel-times';
@@ -31,13 +32,14 @@ export class TravelTimesDataService {
    *
    */
   getTravelTimesData(): Promise<TravelTimesShort[]> {
-    const whereQuery = `where=sorigin.eq.A22`;
-
-    return fetch(` https://mobility.api.opendatahub.com/v2/flat/LinkStation/*/latest?origin=${ORIGIN}&pagesize=-1&${whereQuery}`)
-    // return fetch(`https://mobility.api.opendatahub.testingmachine.eu/v2/flat/LinkStation/*/latest?origin=${ORIGIN}&pagesize=-1&${whereQuery}`)
+    // return fetch(buildUrl('https://mobility.api.opendatahub.testingmachine.eu/v2/flat/LinkStation/*/latest', {
+    return fetch(buildUrl('https://mobility.api.opendatahub.com/v2/flat/LinkStation/*/latest', {
+      origin: ORIGIN,
+      pagesize: -1,
+      where: 'sorigin.eq.A22',
+    }))
       .then(r => r.json() as Promise<ListResponseV2<TravelTimesResponse>>)
       .then(r => r.data)
-      // .then(r => TrafficPredictionUtils.convertToShortInfo(r))
       .then(r => {
         // console.log('getTravelTimesData', r);
         const shortInfoArr = TrafficTimesUtils.convertToShortInfo(r);
