@@ -101,29 +101,50 @@ export class TrafficTimesUtils {
 
   /**
    * parse 'scode'
-   * @example "1865-1864" ->
-   * @example "02_A22A22_01-00680_01-00679_DX"
-   * @example "urn:linkstation:a22:tvcc:28"
+   * @example "1865-1864" -> [1865, 1864]
+   * @example "02_A22A22_01-00680_01-00679_DX" -> [00680, 00679]
+   * @example "urn:linkstation:a22:tvcc:28" -> [28, 28] (???)
    */
   static __parseStationCode(response: TravelTimesResponse): { from: string, to: string } | null {
     const sCodeStr = response?.scode;
+    if (!sCodeStr) {
+      return null;
+    }
 
     const stations = (sCodeStr || '').split('-');
-    if (stations.length != 3) {
-      console.warn('Unable to parse station code (scode):', sCodeStr);
-      return null;
-      ////////////
+    if (stations.length === 1) {
+      // value: "urn:linkstation:a22:tvcc:28"
+      const m = (sCodeStr || '').match(/(?:tvcc:)(\d+)/);
+      if (m) {
+        return {
+          from: m[1],
+          to: m[1],
+        };
+      } else {
+        console.warn('Unable to parse station code (scode):', sCodeStr);
+        return null;
+      }
     }
-    // station code now is in the format 02_A22A22_01-00671_01-00670_DX
-    // and we need to get 00671 - 00670
-    const stationIds = [stations[1].split("_")[0], stations[2].split("_")[0]];
-    if (!stationIds) {
-      console.warn('Unable to parse station code (scode):', sCodeStr);
+
+    if (stations.length === 2) {
+      // value: "1865-1864"
+      return {
+        from: stations[0],
+        to: stations[1],
+      };
     }
-    return {
-      from: stationIds[0],
-      to: stationIds[1],
-    };
+
+    if (stations.length == 3) {
+      // value: "02_A22A22_01-00671_01-00670_DX"
+      // and we need to get 00671 - 00670
+      return {
+        from: stations[1].split("_")[0],
+        to: stations[2].split("_")[0],
+      };
+    }
+
+    console.warn('Unable to parse station code (scode):', sCodeStr);
+    return null;
   }
 
   /**
@@ -178,8 +199,17 @@ export class TrafficTimesUtils {
    * extract station name
    * @example "ROVERETO NORD - TRENTO SUD" -> "ROVERETO NORD" (we cust the first part ony)
    */
-  static __parseStationName(response: TravelTimesResponse): { from: string, to: string } {
-    const names = (response.sname || '').split(' - ');
+  static __parseStationName(response: TravelTimesResponse): { from: string, to: string } | null {
+    const sNameStr = response.sname;
+
+    let names = (sNameStr || '').split(' - ');
+    if (names.length !== 2) {
+      names = (sNameStr || '').split('-');
+    }
+    if (names.length !== 2) {
+      console.warn('Unable to parse station name (sname):', sNameStr);
+      return null;
+    }
     return {from: names[0], to: names[1]};
   }
 
@@ -187,6 +217,10 @@ export class TrafficTimesUtils {
 
     // parse
     const stationName = TrafficTimesUtils.__parseStationName(response);
+    if (!stationName) {
+      return null;
+      ////////////
+    }
 
     const stationIds = TrafficTimesUtils.__parseStationCode(response);
     if (!stationIds) {
@@ -250,7 +284,7 @@ export class TrafficTimesUtils {
         /// main info
         info.distanceFromNorth = response.smetadata?.metroinizio || -1;
 
-        info.stationId = stationIds.from
+        info.stationId = stationIds.from;
         info.name = stationName.from + "-" + stationName.to;
 
         // direction data
