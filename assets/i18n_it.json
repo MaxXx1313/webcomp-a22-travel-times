@@ -9,5 +9,7 @@
   "app.traffic.critical": "Critico",
   "app.traffic.none": "Nessun dato",
   "app.direction.south": "Sud",
-  "app.direction.north": "Nord"
+  "app.direction.north": "Nord",
+  "app.source.tollgate": "Casello",
+  "app.source.tvcc": "TVCC"
 }

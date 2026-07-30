@@ -8,6 +8,7 @@ export interface TravelTimesShort {
   distanceFromNorth: number;
   south?: TravelTimesShort_directionData;
   north?: TravelTimesShort_directionData;
+  source: TravelTimesSource;
 }
 
 export interface TravelTimesShort_directionData {
@@ -26,3 +27,4 @@ export interface TravelTimesShort_directionData {
 
 export type TravelTimesLevel = -1 | 1 | 2 | 3 | 4 | 5;
 export type TravelTimesVehicleType = 'light' | 'heavy';
+export type TravelTimesSource = 'tvcc' | 'tollgate';

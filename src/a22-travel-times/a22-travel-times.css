@@ -213,8 +213,26 @@
 
 .title-select noi-toggle {
   --track-background: var(--color-car-light);
+  --track-background-checked: var(--color-car-light);
+  --handle-color: var(--color-car-handle);
+}
+
+.title-select noi-toggle.vehicle {
+  --track-background: var(--color-car-light);
   --track-background-checked: var(--color-car-heavy);
   --handle-color: var(--color-car-handle);
+}
+
+.title-select .option {
+}
+
+.title-select .option.selected,
+.title-select .option.selected-light {
+  color: var(--color-car-light);
+}
+
+.title-select .option.selected-heavy {
+  color: var(--color-car-heavy);
 }
 
 .vehicle {

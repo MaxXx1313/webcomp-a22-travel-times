@@ -87,9 +87,17 @@ Output:
 
   <div class="btn-group">
     <div class="btn-group__name">vehicle</div>
-    <button onclick="webcam.vehicleType='light'">vehicle: light</button>
-    <button onclick="webcam.vehicleType='heavy'">vehicle: heavy</button>
-    <button onclick="webcam.vehicleType=undefined">vehicle: not set</button>
+    <button onclick="webcam.vehicleType='light'">light</button>
+    <button onclick="webcam.vehicleType='heavy'">heavy</button>
+    <button onclick="webcam.vehicleType=undefined">(not set)</button>
+  </div>
+
+  <div class="btn-group">
+    <div class="btn-group__name">source</div>
+    <button onclick="webcam.sourceType='tollgate'">tollgate</button>
+    <button onclick="webcam.sourceType='tvcc'">tvcc</button>
+    <button onclick="webcam.sourceType='unknown'">(unknown)</button>
+    <button onclick="webcam.sourceType=undefined">(not set)</button>
   </div>
 </div>
 

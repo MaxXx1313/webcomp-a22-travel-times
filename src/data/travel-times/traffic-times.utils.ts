@@ -7,7 +7,7 @@ import { TravelTimesResponse } from "./TravelTimes";
 import {
   TravelTimesLevel,
   TravelTimesShort,
-  TravelTimesShort_directionData,
+  TravelTimesShort_directionData, TravelTimesSource,
   TravelTimesVehicleType
 } from "./TravelTimesShort";
 
@@ -105,7 +105,11 @@ export class TrafficTimesUtils {
    * @example "02_A22A22_01-00680_01-00679_DX" -> [00680, 00679]
    * @example "urn:linkstation:a22:tvcc:28" -> [28, 28] (???)
    */
-  static __parseStationCode(response: TravelTimesResponse): { from: string, to: string } | null {
+  static __parseStationCode(response: TravelTimesResponse): {
+    from: string,
+    to: string,
+    source: TravelTimesSource,
+  } | null {
     const sCodeStr = response?.scode;
     if (!sCodeStr) {
       return null;
@@ -116,14 +120,19 @@ export class TrafficTimesUtils {
       // value: "urn:linkstation:a22:tvcc:28"
       const m = (sCodeStr || '').match(/(?:tvcc:)(\d+)/);
       if (m) {
-        return {
-          from: m[1],
-          to: m[1],
-        };
-      } else {
-        console.warn('Unable to parse station code (scode):', sCodeStr);
-        return null;
+        // cannot use 'scode' as ID, because it's unique and has no second point
+        const names = TrafficTimesUtils.__parseStationName(response);
+
+        if (names) {
+          return {
+            from: (names.from + '').toLowerCase(),
+            to: (names.to + '').toLowerCase(),
+            source: 'tvcc',
+          };
+        }
       }
+      console.warn('Unable to parse station code (scode):', sCodeStr);
+      return null;
     }
 
     if (stations.length === 2) {
@@ -131,6 +140,7 @@ export class TrafficTimesUtils {
       return {
         from: stations[0],
         to: stations[1],
+        source: 'tollgate',
       };
     }
 
@@ -140,6 +150,7 @@ export class TrafficTimesUtils {
       return {
         from: stations[1].split("_")[0],
         to: stations[2].split("_")[0],
+        source: 'tollgate',
       };
     }
 
@@ -254,6 +265,7 @@ export class TrafficTimesUtils {
       stationId: "",
       name: "",
       distanceFromNorth: -1,
+      source: stationIds.source,
     };
 
     const directionData: TravelTimesShort_directionData = {
@@ -275,6 +287,7 @@ export class TrafficTimesUtils {
         };
         break;
     }
+
 
     // Station is a 'line' from north to south or vice-versa.
     // we save always 'north-south' as the name

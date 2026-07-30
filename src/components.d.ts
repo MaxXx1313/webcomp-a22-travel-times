@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2025 NOI Techpark <digital@noi.bz.it>
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
+
 /* eslint-disable */
 /* tslint:disable */
 /**
@@ -8,10 +9,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { TravelTimesLevel, TravelTimesVehicleType } from "./data/travel-times/TravelTimesShort";
+import { TravelTimesLevel, TravelTimesSource, TravelTimesVehicleType } from "./data/travel-times/TravelTimesShort";
 import { ViewLayout } from "./data/breakpoints";
 import { IconName } from "./blocks/icon/icon.component";
-export { TravelTimesLevel, TravelTimesVehicleType } from "./data/travel-times/TravelTimesShort";
+export { TravelTimesLevel, TravelTimesSource, TravelTimesVehicleType } from "./data/travel-times/TravelTimesShort";
 export { ViewLayout } from "./data/breakpoints";
 export { IconName } from "./blocks/icon/icon.component";
 export namespace Components {
@@ -35,6 +36,10 @@ export namespace Components {
           * Data reload interval
          */
         "reloadInterval": number;
+        /**
+          * Source type
+         */
+        "sourceType": TravelTimesSource;
         /**
           * Vehicle type
          */
@@ -149,6 +154,10 @@ declare namespace LocalJSX {
           * Data reload interval
          */
         "reloadInterval"?: number;
+        /**
+          * Source type
+         */
+        "sourceType"?: TravelTimesSource;
         /**
           * Vehicle type
          */

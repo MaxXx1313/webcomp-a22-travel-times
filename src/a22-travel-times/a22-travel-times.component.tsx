@@ -7,7 +7,7 @@ import { getLayoutClass, resolveLayoutAuto, ViewLayout } from "../data/breakpoin
 import { LanguageDataService } from "../data/language/language-data-service";
 import { StencilComponent } from "../utils/StencilComponent";
 import { TravelTimesDataService } from "../data/travel-times/travel-times-data-service";
-import { TravelTimesShort, TravelTimesVehicleType } from "../data/travel-times/TravelTimesShort";
+import { TravelTimesShort, TravelTimesSource, TravelTimesVehicleType } from "../data/travel-times/TravelTimesShort";
 import { Subscription } from "../utils/TimerWatcher";
 import { formatDateTime } from "../utils/date";
 
@@ -36,6 +36,12 @@ export class A22TravelTimesComponent implements StencilComponent {
    */
   @Prop({mutable: true})
   vehicleType: TravelTimesVehicleType = 'light';
+
+  /**
+   * Source type
+   */
+  @Prop({mutable: true})
+  sourceType: TravelTimesSource = 'tollgate';
 
   /**
    * Layout appearance
@@ -143,17 +149,28 @@ export class A22TravelTimesComponent implements StencilComponent {
     this.vehicleType = isHeavyVehicle ? 'heavy' : 'light';
   }
 
+  changeSourceType(e: CustomEvent) {
+    const isTvcc = e.detail.checked;
+    this.sourceType = isTvcc ? 'tvcc' : 'tollgate';
+  }
+
   setVehicleType(type: TravelTimesVehicleType) {
     this.vehicleType = type;
   }
 
+  setSourceType(type: TravelTimesSource) {
+    this.sourceType = type;
+  }
+
   render() {
+    const sourceType = this.sourceType === 'tvcc' ? 'tvcc' : 'tollgate'; // protect from invalid value
+    const data = this._travelTimesData.filter(tt => tt.source === sourceType);
     return (
       <Host class={getLayoutClass(this.layoutResolved)}>
         {this._renderTitle()}
         <div class="layout__scroll" part="scroll">
           <div class="layout__center" part="content">
-            {this._travelTimesData.map(this._renderTableCell)}
+            {data.map(this._renderTableCell)}
           </div>
           <div class="layout__spacer"></div>
         </div>
@@ -204,29 +221,44 @@ export class A22TravelTimesComponent implements StencilComponent {
 
           <div class="title-select">
             <noi-icon name="vehicle" class={'vehicle--' + this.vehicleType}></noi-icon>
-            <div class={this.vehicleType === 'light' ? 'vehicle vehicle--light' : 'vehicle'}
+            <div class={this.vehicleType === 'light' ? 'option selected-light' : 'option'}
                  onClick={() => this.setVehicleType('light')}>
               {this.languageService.translate('app.vehicle.light')}
             </div>
-            <noi-toggle checked={this.vehicleType === 'heavy'}
+            <noi-toggle class="vehicle"
+                        checked={this.vehicleType === 'heavy'}
                         onNoiChange={e => this.changeVehicleType(e)}></noi-toggle>
-            <div class={this.vehicleType === 'heavy' ? 'vehicle vehicle--heavy' : 'vehicle'}
+            <div class={this.vehicleType === 'heavy' ? 'option selected-heavy' : 'option'}
                  onClick={() => this.setVehicleType('heavy')}>
               {this.languageService.translate('app.vehicle.heavy')}
             </div>
           </div>
-        </div>
 
-        <div class="title title--header-direction">
-          <noi-icon class="title__icon" name="arrow_downward"></noi-icon>
-          <div class="title__text">{this.languageService.translate('app.direction.south')}</div>
-        </div>
-        <div class="title title--header-direction">
-          <noi-icon class="title__icon" name="arrow_upward"></noi-icon>
-          <div class="title__text">{this.languageService.translate('app.direction.north')}</div>
-        </div>
+            <div class="title-select">
+              <div class={this.sourceType === 'tollgate' ? 'option selected' : 'option'}
+                   onClick={() => this.setSourceType('tollgate')}>
+                {this.languageService.translate('app.source.tollgate')}
+              </div>
+              <noi-toggle checked={this.sourceType === 'tvcc'}
+                          onNoiChange={e => this.changeSourceType(e)}></noi-toggle>
+              <div class={this.sourceType === 'tvcc' ? 'option selected' : 'option'}
+                   onClick={() => this.setSourceType('tvcc')}>
+                {this.languageService.translate('app.source.tvcc')}
+              </div>
+          </div>
       </div>
-    </div>);
+
+      <div class="title title--header-direction">
+        <noi-icon class="title__icon" name="arrow_downward"></noi-icon>
+        <div class="title__text">{this.languageService.translate('app.direction.south')}</div>
+      </div>
+      <div class="title title--header-direction">
+        <noi-icon class="title__icon" name="arrow_upward"></noi-icon>
+        <div class="title__text">{this.languageService.translate('app.direction.north')}</div>
+      </div>
+    </div>
+  </div>)
+    ;
   }
 
   _renderFooter() {

@@ -9,5 +9,7 @@
   "app.traffic.critical": "Gridlock",
   "app.traffic.none": "No data",
   "app.direction.south": "South",
-  "app.direction.north": "North"
+  "app.direction.north": "North",
+  "app.source.tollgate": "Tollgate",
+  "app.source.tvcc": "TVCC"
 }
