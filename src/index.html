@@ -40,21 +40,35 @@ Output:
 
 
 <div>
-  <button onclick="webcam.style.width = '500px'">size x1</button>
-  <button onclick="webcam.style.width = '800px'">size x2</button>
-  <button onclick="webcam.style.width = '100%'">size full</button>
-  <button onclick="webcam.layout = 'mobile'">layout mobile</button>
-  <button onclick="webcam.layout = 'tablet'">layout tablet</button>
-  <button onclick="webcam.layout = 'desktop'">layout desktop</button>
-  <button onclick="webcam.layout = 'auto'">layout auto</button>
-  <button onclick="webcam.language = 'en'">lang: en</button>
-  <button onclick="webcam.language = 'it'">lang: it</button>
-  <button onclick="webcam.language = 'xx'">lang: xx (missing)</button>
-  <button onclick="webcam.language = null">lang: auto</button>
-  <button onclick="webcam.classList.remove('dark'); webcam.classList.remove('dark-alt')">styles: default</button>
-  <button onclick="webcam.classList.add('dark'); webcam.classList.remove('dark-alt')">styles: dark mode</button>
-  <button onclick="webcam.refreshData()">refreshData</button>
-  <button onclick="webcam.vehicleType='heavy'">vehicle: heavy</button>
+  <div class="btn-group">
+    <div class="btn-group__name">Size</div>
+    <button onclick="webcam.style.width = '500px'">mobile</button>
+    <button onclick="webcam.style.width = '890px'">tablet</button>
+    <button onclick="webcam.style.width = '100%'">full</button>
+    <button onclick="webcam.style.width = '968px'; webcam.style.height = '800px'">preview</button>
+  </div>
+
+  <div class="btn-group">
+    <div class="btn-group__name">layout</div>
+    <button onclick="webcam.layout = 'mobile'">mobile</button>
+    <button onclick="webcam.layout = 'tablet'">tablet</button>
+    <button onclick="webcam.layout = 'desktop'">desktop</button>
+    <button onclick="webcam.layout = 'auto'">auto</button>
+  </div>
+
+  <div class="btn-group">
+    <div class="btn-group__name">language</div>
+    <button onclick="webcam.language = 'en'">lang: en</button>
+    <button onclick="webcam.language = 'it'">lang: it</button>
+    <button onclick="webcam.language = 'xx'">lang: xx (missing)</button>
+    <button onclick="webcam.language = null">lang: auto</button>
+  </div>
+
+  <div class="btn-group">
+    <div class="btn-group__name">styles</div>
+    <button onclick="webcam.classList.remove('dark');">styles: default</button>
+    <button onclick="webcam.classList.add('dark');">styles: dark mode</button>
+  </div>
 
   <script>
     function changeFontSize(change) {
@@ -62,8 +76,21 @@ Output:
       webcam.style.fontSize = (currentSize + change) + 'px';
     }
   </script>
-  <button onclick="changeFontSize(-1)">font -</button>
-  <button onclick="changeFontSize(1)">font +</button>
+
+
+  <div class="btn-group">
+    <div class="btn-group__name">actions</div>
+    <button onclick="changeFontSize(-1)">font -</button>
+    <button onclick="changeFontSize(1)">font +</button>
+    <button onclick="webcam.refreshData()">refreshData</button>
+  </div>
+
+  <div class="btn-group">
+    <div class="btn-group__name">vehicle</div>
+    <button onclick="webcam.vehicleType='light'">vehicle: light</button>
+    <button onclick="webcam.vehicleType='heavy'">vehicle: heavy</button>
+    <button onclick="webcam.vehicleType=undefined">vehicle: not set</button>
+  </div>
 </div>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -100,6 +127,34 @@ Output:
 
     --scrollbar-color: #777;
     --scrollbar-bg: #444;
+  }
+</style>
+
+
+<style>
+  .btn-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5ch;
+    position: relative;
+
+    padding: 4px;
+    padding-bottom: 3ch;
+    margin: 2px;
+    border: 1px solid gray;
+    border-radius: 4px;
+  }
+
+  .btn-group .btn-group__name {
+    padding: 4px;
+    padding-right: 1ch;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    text-transform: lowercase;
   }
 </style>
 
