@@ -19,7 +19,7 @@ describe("TrafficTimesUtils", () => {
       ];
 
       for (const inp of inputArr) {
-        expect(TrafficTimesUtils.parseTrafficLevel(inp)).toBe(1);
+        expect(TrafficTimesUtils.__parseTrafficLevel({mvalue: inp} as any)).toBe(1);
       }
     });
 
@@ -32,7 +32,7 @@ describe("TrafficTimesUtils", () => {
       ];
 
       for (const inp of inputArr) {
-        expect(TrafficTimesUtils.parseTrafficLevel(inp)).toBe(2);
+        expect(TrafficTimesUtils.__parseTrafficLevel({mvalue: inp} as any)).toBe(2);
       }
     });
 
