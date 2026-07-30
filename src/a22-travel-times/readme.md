@@ -16,12 +16,13 @@ Traffic forecast component
 
 ## Properties
 
-| Property         | Attribute         | Description          | Type                                          | Default   |
-| ---------------- | ----------------- | -------------------- | --------------------------------------------- | --------- |
-| `language`       | `language`        | Language             | `string`                                      | `'en'`    |
-| `layout`         | `layout`          | Layout appearance    | `"auto" \| "desktop" \| "mobile" \| "tablet"` | `'auto'`  |
-| `reloadInterval` | `reload-interval` | Data reload interval | `number`                                      | `600000`  |
-| `vehicleType`    | `vehicle-type`    | Vehicle type         | `"heavy" \| "light"`                          | `'light'` |
+| Property         | Attribute         | Description          | Type                                          | Default      |
+| ---------------- | ----------------- | -------------------- | --------------------------------------------- | ------------ |
+| `language`       | `language`        | Language             | `string`                                      | `'en'`       |
+| `layout`         | `layout`          | Layout appearance    | `"auto" \| "desktop" \| "mobile" \| "tablet"` | `'auto'`     |
+| `reloadInterval` | `reload-interval` | Data reload interval | `number`                                      | `600000`     |
+| `sourceType`     | `source-type`     | Source type          | `"tollgate" \| "tvcc"`                        | `'tollgate'` |
+| `vehicleType`    | `vehicle-type`    | Vehicle type         | `"heavy" \| "light"`                          | `'light'`    |
 
 
 ## Methods

@@ -60,6 +60,19 @@
         }
       },
       {
+        "key": "source-type",
+        "type": "select",
+        "label": "Initial source type",
+        "required": false,
+        "options": {
+          "values": [
+            "tollgate",
+            "tvcc"
+          ],
+          "default": "tollgate"
+        }
+      },
+      {
         "key": "layout",
         "type": "select",
         "label": "Layout appearance",

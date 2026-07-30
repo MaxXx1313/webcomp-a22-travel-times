@@ -15,36 +15,7 @@ A responsive webcomponent for showing travel times on Brennerlec A22 road
 - [Brennerlec travel times](#brennerlec-travel-times)
   - [Usage](#usage)
     - [Attributes](#attributes)
-      - [language](#language)
-      - [layout](#layout)
-      - [vehicle-type](#vehicle-type)
-      - [reload-interval](#reload-interval)
     - [CSS varialbles](#css-variables)
-      - [--color-primary](#--color-primary)
-      - [--color-secondary](#--color-secondary)
-      - [--color-text](#--color-text)
-      - [--color-background](#--color-background)
-      - [--color-border](#--color-border)
-      - [--color-footer](#--color-footer)
-      - [--color-footer-contrast](#--color-footer-contrast)
-      - [--color-busy-regular](#--color-busy-regular)
-      - [--color-busy-regular-contrast](#--color-busy-regular-contrast)
-      - [--color-busy-light](#--color-busy-light)
-      - [--color-busy-light-contrast](#--color-busy-light-contrast)
-      - [--color-busy-severe](#--color-busy-severe)
-      - [--color-busy-severe-contrast](#--color-busy-severe-contrast)
-      - [--color-busy-heavy](#--color-busy-heavy)
-      - [--color-busy-heavy-contrast](#--color-busy-heavy-contrast)
-      - [--color-busy-critical](#--color-busy-critical)
-      - [--color-busy-critical-contrast](#--color-busy-critical-contrast)
-      - [--color-busy-empty](#--color-busy-empty)
-      - [--color-busy-empty-contrast](#--color-busy-empty-contrast)
-      - [--color-car-light](#--color-car-light)
-      - [--color-car-heavy](#--color-car-heavy)
-      - [--color-car-handle](#--color-car-handle)
-      - [--scrollbar-color](#--scrollbar-color)
-      - [--scrollbar-bg](#--scrollbar-bg)
-      - [--busy-box-size](#--busy-box-size)
   - [Getting started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Source code](#source-code)
@@ -85,73 +56,53 @@ You may adjust the size and font of the component with regular CSS properties.
 ### Attributes
 
 
-#### language
+| Property         | Attribute         | Description          | Type                                          | Default      |
+| ---------------- | ----------------- | -------------------- | --------------------------------------------- | ------------ |
+| `language`       | `language`        | Language             | `string`                                      | `'en'`       |
+| `layout`         | `layout`          | Layout appearance    | `"auto" \| "desktop" \| "mobile" \| "tablet"` | `'auto'`     |
+| `reloadInterval` | `reload-interval` | Data reload interval | `number`                                      | `600000`     |
+| `sourceType`     | `source-type`     | Source type          | `"tollgate" \| "tvcc"`                        | `'tollgate'` |
+| `vehicleType`    | `vehicle-type`    | Vehicle type         | `"heavy" \| "light"`                          | `'light'`    |
 
-Language.
-
-Type
-: string
-
-Default
-: browser language or 'en' if the language is not supported
-
-Options
-: "en", "it"
-
-
-#### layout
-
-Layout appearance.
-We support three layouts: desktop, tablet and mobile.
-
-Type
-: string
-
-Default
-: 'auto', which means the layout will dynamically adjust to screen size
-
-Options
-: "desktop", "tablet", "mobile", "auto"
-
-
-#### vehicle-type
-
-Initial type of vehicle.
-
-Type
-: string
-
-Default
-: 'light'
-
-Options
-: 'light', 'heavy'
-
-
-#### reload-interval
-
-Data reload interval
-
-Type
-: number
-
-Default
-: 600000 (10 minutes)
-
-Minimum value:
-: 60000 (1 minute)
 
 
 ### CSS variables
 
 The component supports the following variables to adjust the appearance.
+
+| Name                             | Description                        |
+| -------------------------------- | ---------------------------------- |
+| `--busy-box-size`                | Size of the traffic box indicator  |
+| `--color-background`             | Background color                   |
+| `--color-border`                 | Border line color                  |
+| `--color-busy-critical`          | Critical traffic color             |
+| `--color-busy-critical-contrast` | Critical traffic contrast color    |
+| `--color-busy-empty`             | No data traffic color              |
+| `--color-busy-empty-contrast`    | No data traffic contrast color     |
+| `--color-busy-heavy`             | Heavy traffic color                |
+| `--color-busy-heavy-contrast`    | Heavy traffic contrast color       |
+| `--color-busy-light`             | Light delay traffic color          |
+| `--color-busy-light-contrast`    | Light delay traffic contrast color |
+| `--color-busy-regular`           | Regular traffic color              |
+| `--color-busy-regular-contrast`  | Regular traffic contrast color     |
+| `--color-busy-severe`            | Severe traffic color               |
+| `--color-busy-severe-contrast`   | Severe traffic contrast color      |
+| `--color-car-handle`             | Handle color                       |
+| `--color-car-heavy`              | Label color of heavy car option    |
+| `--color-car-light`              | Label color of light car option    |
+| `--color-footer`                 | Footer color                       |
+| `--color-footer-contrast`        | Footer contrast color              |
+| `--color-primary`                | Primary color                      |
+| `--color-secondary`              | Secondary color                    |
+| `--color-text`                   | Text color                         |
+| `--scrollbar-bg`                 | Scrollbar background color         |
+| `--scrollbar-color`              | Scrollbar thumb color              |
+
+
 Here is an example of dark mode styles:
 
 ```css
 noi-a22-travel-times.dark {
-  font-family: cursive;
-  outline: 1px solid red;
-
   --color-primary: rgb(224, 224, 224);
   --color-secondary: rgb(224, 224, 224);
   --color-text: #EEE;
@@ -173,182 +124,6 @@ noi-a22-travel-times.dark {
   --scrollbar-color: #777;
   --scrollbar-bg: #444;
 }
-```
-
-
-#### --color-primary
-
-Primary color. Default is:
-```css
-  --color-primary: #0068B4;
-```
-
-#### --color-secondary
-
-Secondary color. Default is:
-```css
-  --color-secondary: #00A767;
-```
-
-#### --color-text
-
-Text color. Default is:
-```css
-  --color-text: #6792AA;
-```
-
-#### --color-background
-
-Background color. Default is:
-```css
-  --color-background: #FFFFFF;
-```
-
-#### --color-border
-
-Border line color. Default is:
-```css
-  --color-border: #0068B4;
-```
-
-#### --color-footer
-
-Footer color. Default is:
-```css
-  --color-footer: #0068b4;
-```
-
-#### --color-footer-contrast
-
-Footer contrast color. Default is:
-```css
-  --color-footer-contrast: #FFFFFF;
-```
-
-#### --color-busy-regular
-
-Regular traffic color. Default is:
-```css
-  --color-busy-regular: #18a767;
-```
-
-#### --color-busy-regular-contrast
-
-Regular traffic contrast color. Default is:
-```css
-  --color-busy-regular-contrast: #FFFFFF;
-```
-
-#### --color-busy-light
-
-Light delay traffic color. Default is:
-```css
-  --color-busy-light: #99d913;
-```
-
-#### --color-busy-light-contrast
-
-Light delay traffic contrast color. Default is:
-```css
-  --color-busy-light-contrast: #FFFFFF;
-```
-
-#### --color-busy-severe
-
-Severe traffic color. Default is:
-```css
-  --color-busy-severe: #fab813;
-```
-
-#### --color-busy-severe-contrast
-
-Severe traffic contrast color. Default is:
-```css
-  --color-busy-severe-contrast: #FFFFFF;
-```
-
-#### --color-busy-heavy
-
-Heavy traffic color. Default is:
-```css
-  --color-busy-heavy: #FF7F2C;
-```
-
-#### --color-busy-heavy-contrast
-
-Heavy traffic contrast color. Default is:
-```css
-  --color-busy-heavy-contrast: #FFFFFF;
-```
-
-#### --color-busy-critical
-
-Critical traffic color. Default is:
-```css
-  --color-busy-critical: #f22139;
-```
-
-#### --color-busy-critical-contrast
-
-Critical traffic contrast color. Default is:
-```css
-  --color-busy-critical-contrast: #FFFFFF;
-```
-
-#### --color-busy-empty
-
-No data traffic color. Default is:
-```css
-  --color-busy-empty: #DDD;
-```
-
-#### --color-busy-empty-contrast
-
-No data traffic contrast color. Default is:
-```css
-  --color-busy-empty-contrast: #666;
-```
-
-#### --color-car-light
-
-Label color of light car option. Default is:
-```css
-  --color-car-light: var(--color-busy-regular);
-```
-
-#### --color-car-heavy
-
-Label color of heavy car option. Default is:
-```css
-  --color-car-heavy: var(--color-busy-heavy);
-```
-
-#### ---color-car-handle
-
-Handle color. Default is:
-```css
-  --color-car-handle: #FFF;
-```
-
-#### --scrollbar-color
-
-Scrollbar thumb color. Default is:
-```css
-  --scrollbar-color: initial;
-```
-
-#### --scrollbar-bg
-
-Scrollbar background color. Default is:
-```css
-  --scrollbar-bg: initial;
-```
-
-#### --busy-box-size
-
-Size of the traffic box indicator. Default is:
-```css
-  --busy-box-size: 2.2em;
 ```
 
 
