@@ -114,19 +114,19 @@ describe("TrafficTimesUtils", () => {
     it('should parse scode L3', () => {
 
       expect(TrafficTimesUtils.__parseStationCode({scode: "02_A22A22_01-00680_01-00679_DX"} as any))
-        .toStrictEqual({from:'00680', to:'00679', source: "tollgate"});
+        .toStrictEqual({from:'00680', to:'00679'});
     });
 
     it('should parse scode L2', () => {
 
       expect(TrafficTimesUtils.__parseStationCode({scode: "1865-1864"} as any))
-        .toStrictEqual({from:'1865', to:'1864', source: "tollgate"});
+        .toStrictEqual({from:'1865', to:'1864'});
     });
 
     it('should parse scode L0', () => {
 
       expect(TrafficTimesUtils.__parseStationCode({scode: "urn:linkstation:a22:tvcc:28", sname:"K1-K2"} as any))
-        .toStrictEqual({from:'k1', to:'k2', source: "tvcc"});
+        .toStrictEqual({from:'k1', to:'k2'});
     });
 
 

@@ -27,4 +27,4 @@ export interface TravelTimesShort_directionData {
 
 export type TravelTimesLevel = -1 | 1 | 2 | 3 | 4 | 5;
 export type TravelTimesVehicleType = 'light' | 'heavy';
-export type TravelTimesSource = 'tvcc' | 'tollgate';
+export type TravelTimesSource = 'tvcc' | 'tollgate' | 'unknown';

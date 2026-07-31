@@ -17,6 +17,12 @@ export type TravelTimesDirection = "Sud" | "Nord";
 
 interface StationMetadata {
   /**
+   * Data source
+   * @example "tvcc"
+   * @example "tollgate"
+   */
+  dataset?: "tvcc" | "tollgate";
+  /**
    * segment length
    * @example 12500
    */

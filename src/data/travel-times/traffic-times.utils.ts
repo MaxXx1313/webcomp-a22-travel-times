@@ -103,12 +103,11 @@ export class TrafficTimesUtils {
    * parse 'scode'
    * @example "1865-1864" -> [1865, 1864]
    * @example "02_A22A22_01-00680_01-00679_DX" -> [00680, 00679]
-   * @example "urn:linkstation:a22:tvcc:28" -> [28, 28] (???)
+   * @example "urn:linkstation:a22:tvcc:28" -> take ids from name
    */
   static __parseStationCode(response: TravelTimesResponse): {
     from: string,
     to: string,
-    source: TravelTimesSource,
   } | null {
     const sCodeStr = response?.scode;
     if (!sCodeStr) {
@@ -127,7 +126,6 @@ export class TrafficTimesUtils {
           return {
             from: (names.from + '').toLowerCase(),
             to: (names.to + '').toLowerCase(),
-            source: 'tvcc',
           };
         }
       }
@@ -140,7 +138,6 @@ export class TrafficTimesUtils {
       return {
         from: stations[0],
         to: stations[1],
-        source: 'tollgate',
       };
     }
 
@@ -150,7 +147,6 @@ export class TrafficTimesUtils {
       return {
         from: stations[1].split("_")[0],
         to: stations[2].split("_")[0],
-        source: 'tollgate',
       };
     }
 
@@ -239,6 +235,13 @@ export class TrafficTimesUtils {
       ////////////
     }
 
+    const dataSourceType = response.smetadata?.dataset;
+    if (!dataSourceType) {
+      console.debug('Skip unknown dataset (smetadata.dataset)', response);
+      return null;
+      ////////////
+    }
+
     // parse 'iddirezione'
     const direction = TrafficTimesUtils.__parseDirection(response);
     if (!direction) {
@@ -265,7 +268,7 @@ export class TrafficTimesUtils {
       stationId: "",
       name: "",
       distanceFromNorth: -1,
-      source: stationIds.source,
+      source: dataSourceType,
     };
 
     const directionData: TravelTimesShort_directionData = {
