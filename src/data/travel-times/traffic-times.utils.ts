@@ -7,7 +7,7 @@ import { TravelTimesResponse } from "./TravelTimes";
 import {
   TravelTimesLevel,
   TravelTimesShort,
-  TravelTimesShort_directionData, TravelTimesSource,
+  TravelTimesShort_directionData,
   TravelTimesVehicleType
 } from "./TravelTimesShort";
 
